@@ -1,0 +1,16 @@
+<template>
+  <view>Votelist Page</view>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationBarTitleText: '投票列表',
+    usingComponents: {}
+  },
+  data: {}
+}
+</script>
+
+<style>
+</style>

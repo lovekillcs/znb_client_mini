@@ -1,0 +1,16 @@
+<template>
+  <view>Vote Page</view>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationBarTitleText: '投票界面',
+    usingComponents: {}
+  },
+  data: {}
+}
+</script>
+
+<style>
+</style>

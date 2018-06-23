@@ -1,0 +1,58 @@
+<template>
+    <view>
+        <layout-head></layout-head>
+
+        <!-- wxp template -->
+        <page></page>
+
+        <layout-foot></layout-foot>
+    </view>
+</template>
+
+<script>
+    const nami = require('./nami/index');
+    export default {
+        config: {
+            pages: [],
+            window: {
+                backgroundTextStyle: 'dark',
+                backgroundColor: '#efefef',
+                navigationBarBackgroundColor: '#ffffff',
+                navigationBarTitleText: '站哪边',
+                navigationBarTextStyle: 'black'
+            },
+            networkTimeout: {
+                request: 10000
+            }
+        },
+        globalData: {},
+        onLaunch() {
+            var app = this;
+            //登录
+            nami.login(() => {
+                // nami.getUserInfo((userInfo) => {
+                //     console.log("已获取数据", userInfo);
+                //     app.globalData.userInfo = userInfo;
+                //     if (wx.canIUse('button.open-type.getUserInfo')) {
+                //         if (app.userInfoReadyCallback) {
+                //             app.userInfoReadyCallback(userInfo);
+                //         }
+                //     }
+                // }, () => {
+                //     console.log("用户拒绝提供信息");
+                // });
+            });
+        },
+        onShow() { },
+        onHide() { }
+    }
+</script>
+
+<style>
+    page {
+        background-color: #F8F8F8;
+        height: 100%;
+        font-size: 32rpx;
+        line-height: 1.5;
+    }
+</style>

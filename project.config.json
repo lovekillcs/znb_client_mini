@@ -1,0 +1,16 @@
+{
+	"miniprogramRoot": "dist",
+	"description": "项目配置文件。",
+	"compileType": "miniprogram",
+	"libVersion": "1.9.1",
+	"appid": "wxd867c9aa39558ece",
+	"projectname": "%E7%AB%99%E5%93%AA%E8%BE%B9",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"condition": {}
+}

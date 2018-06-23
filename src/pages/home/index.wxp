@@ -1,0 +1,470 @@
+<template>
+
+    <!-- <view class="page" style="background-image: url({{bgUrl}});">
+
+    </view> -->
+
+    <wxc-toast is-show="{{$toast.show}}" icon="yes" text="分享成功" icon-color="#ff5777"></wxc-toast>
+
+    <view class="container">
+        <wxc-avatar class="avatar" src={{bgUrl}}></wxc-avatar>
+        <wxc-button class="btn_vote" btnStyle=" color: #ff00ff; background: transparent none; font-size:40rpx; padding-bottom:0px; border-bottom:2px solid #ff00ff"
+            bindsubmit="onVote" value="激情开投"></wxc-button>
+    </view>
+
+    <div class="sender">
+        <div>
+            <image src="http://7xk6hd.com1.z0.glb.clouddn.com/wp-content/uploads/2015/10/edd85962dd22_avatar-54x54.png">
+        </div>
+        <div>
+            <div class="left_triangle"></div>
+            <span> hello, man! </span>
+        </div>
+    </div>
+    <div class="receiver">
+        <div>
+            <image src="http://7xk6hd.com1.z0.glb.clouddn.com/wp-content/uploads/2015/09/62fe2d610ba9_avatar-80x80.jpeg">
+        </div>
+        <div>
+            <div class="right_triangle"></div>
+            <span> hello world </span>
+        </div>
+    </div>
+    <div class="sender">
+        <div>
+            <image src="http://7xk6hd.com1.z0.glb.clouddn.com/wp-content/uploads/2015/10/edd85962dd22_avatar-54x54.png">
+        </div>
+        <div>
+            <div class="left_triangle"></div>
+            <span> 笑什么笑，没看到本宝宝今天变漂亮了吗？ </span>
+        </div>
+    </div>
+    <div class="receiver">
+        <div>
+            <image src="http://7xk6hd.com1.z0.glb.clouddn.com/wp-content/uploads/2015/09/62fe2d610ba9_avatar-80x80.jpeg">
+        </div>
+        <div>
+            <div class="right_triangle"></div>
+            <span>I love you,Man </span>
+        </div>
+    </div>
+
+
+
+    <!-- <div class="leftd">
+        <span ng-class="leftd_h">
+            <image src={{bgUrl}} />
+        </span>
+        <div class="speech left" ng-class="speech left">
+            二货，你看你傻样！
+        </div>
+    </div>
+    <div class="rightd">
+        <span ng-class="rightd_h">
+            <image src={{bgUrl}} />
+        </span>
+        <div class="speech right" ng-class="speech left">
+            嘻嘻嘻嘻。。。。。。
+        </div>
+    </div>
+    <div class="leftd">
+        <span ng-class="leftd_h">
+            <image src={{bgUrl}} />
+        </span>
+        <div class="speech left" ng-class="speech left">
+            笑什么笑，没看到本宝宝今天变漂亮了吗？
+        </div>
+    </div>
+    <div class="rightd">
+        <span ng-class="rightd_h">
+            <image src={{bgUrl}} />
+        </span>
+        <div class="speech right" ng-class="speech left">
+            不不不，每天你都很漂亮的啦！
+        </div>
+    </div> -->
+
+</template>
+
+<script>
+    const nami = require('../../nami/index');
+    const app = getApp();
+    export default {
+        config: {
+            usingComponents: {
+                'wxc-avatar': '@minui/wxc-avatar',
+                'wxc-button': '@minui/wxc-button',
+                'wxc-toast': '@minui/wxc-toast'
+            }
+        },
+
+        data: {
+            bgUrl: "https://s10.mogucdn.com/mlcdn/c45406/171116_3a30h33df8cj7f651al68hdh7bki7_528x528.png",
+            $toast: {
+                show: false
+            }
+        },
+
+        onLoad() {
+            var that = this//不要漏了这句，很重要
+            if (!app.globalData.votes) {
+                wx.request({
+                    url: 'http://172.17.29.76/votes_config',
+                    headers: { 'Content-Type': 'application/json' },
+                    success: function (res) {
+                        app.globalData.votes = res.data.votes;
+                        console.log(app.globalData.votes);
+                        that.setData({
+
+                        })
+                    },
+                    fail: function () {
+
+                    }
+                })
+            }
+        },
+
+
+        onVote(e) {
+            wx.navigateTo({
+                url: '../vote/index'
+            })
+        },
+
+        onShareAppMessage(options) {
+            var that = this;
+            // 设置菜单中的转发按钮触发转发事件时的转发内容
+            var shareObj = {
+                // title: "站哪边",        // 默认是小程序的名称(可以写slogan等)
+                // path: '/pages/share/share',        // 默认是当前页面，必须是以‘/’开头的完整路径
+                // imgUrl: '',     //自定义图片路径，可以是本地文件路径、代码包文件路径或者网络图片路径，支持PNG及JPG，不传入 imageUrl 则使用默认截图。显示图片长宽比是 5:4
+                success: function (res) {
+                    // 转发成功之后的回调
+                    if (res.errMsg == 'shareAppMessage:ok') {
+                        that.setData({
+                            $toast: {
+                                show: true
+                            }
+                        });
+
+                        setTimeout(() => {
+                            that.setData({
+                                $toast: {
+                                    show: false
+                                }
+                            });
+                        }, 1500);
+                    }
+                },
+                fail: function (res) {
+                    // 转发失败之后的回调
+                    if (res.errMsg == 'shareAppMessage:fail cancel') {
+                        // 用户取消转发
+                    } else if (res.errMsg == 'shareAppMessage:fail') {
+                        // 转发失败，其中 detail message 为详细失败信息
+                    }
+                },
+                complete: function () {
+                    // 转发结束之后的回调（转发成不成功都会执行）
+                }
+            }
+            // 来自页面内的按钮的转发
+            // if (options.from == 'button') {
+            //     var eData = options.target.dataset;
+            //     console.log(eData.name);     // shareBtn
+            //     // 此处可以修改 shareObj 中的内容
+            //     shareObj.path = '/pages/btnname/btnname?btn_name=' + eData.name;
+            // }
+            // 返回shareObj
+            return shareObj;
+        },
+    }
+</script>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .page {
+        overflow: hidden;
+        position: fixed;
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .btn_vote {
+        /* color:blue; */
+        color: #343a40;
+        background: transparent none;
+        border-color: #343a40;
+    }
+
+    .avatar {
+        display: block;
+        width: 120rpx;
+        height: 120rpx;
+    }
+
+    .popo {
+        display: table-cell;
+        text-align: center;
+        /* position: absolute;
+        top: 200rpx;
+        left: 50%;
+        margin-left: -150rpx; */
+        width: 300rpx;
+        height: 150rpx;
+        box-shadow: 1rpx 1rpx 6rpx #C6F;
+        border-radius: 50%;
+        vertical-align: middle;
+        /* may require vendor prefixes */
+        /* background: yellow; */
+    }
+
+    /* .comment {
+        width: 200rpx;
+        height: 50rpx;
+        position: relative;
+        margin: 30rpx auto 0;
+        background: #f8ac09;
+        border-radius: 5rpx;
+    }
+
+    .comment:after {
+        content: '';
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 5rpx;
+        right: -16rpx;
+        border: solid 8rpx;
+        border-color: transparent transparent transparent #f8ac09;
+        font-size: 0;
+    } */
+
+    .sender {
+        display: block;
+        clear: both;
+    }
+
+    .sender div:nth-of-type(1) {
+        float: left;
+    }
+
+    .sender div:nth-of-type(2) {
+        background-color: aquamarine;
+        float: left;
+        max-width: 300px;
+        margin: 0 20px 10px 15px;
+        padding: 10px 10px 10px 0px;
+        border-radius: 7px;
+    }
+
+    .receiver div:first-child image,
+    .sender div:first-child image {
+        width: 64px;
+        height: 64px;
+    }
+
+    .receiver {
+        display: block;
+        clear: both;
+    }
+
+    .receiver div:nth-of-type(1) {
+        float: right;
+    }
+
+    .receiver div:nth-of-type(2) {
+        float: right;
+        background-color: gold;
+        margin: 0 10px 10px 20px;
+        padding: 10px 0px 10px 10px;
+        border-radius: 7px;
+    }
+
+    .left_triangle {
+        height: 0px;
+        width: 0px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent aquamarine transparent transparent;
+        position: relative;
+        left: -14px;
+        top: 5px;
+    }
+
+    .right_triangle {
+        height: 0px;
+        width: 0px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent transparent gold;
+        position: relative;
+        right: -14px;
+        top: 5px;
+    }
+
+    /* 微信气泡 */
+
+    /* div.speech {
+        float: left;
+        margin: 10px 0;
+        padding: 8px;
+        table-layout: fixed;
+        word-break: break-all;
+        position: relative;
+        background: -webkit-gradient( linear, 50% 0%, 50% 100%, from(#ffffff), color-stop(0.1, #ececec), color-stop(0.5, #dbdbdb), color-stop(0.9, #dcdcdc), to(#8c8c8c));
+        border: 1px solid #989898;
+        border-radius: 8px;
+    }
+
+    div.speech:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 15px;
+        top: -20px;
+        border: 10px solid;
+        border-color: transparent transparent #989898 transparent;
+    }
+
+    div.speech:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 17px;
+        top: -16px;
+        border: 8px solid;
+        border-color: transparent transparent #ffffff transparent;
+    }
+
+    div.speech.right {
+        display: inline-block;
+        box-shadow: -2px 2px 5px #CCC;
+        margin-right: 10px;
+        max-width: 75%;
+        float: right;
+        background: -webkit-gradient( linear, 50% 0%, 50% 100%, from(#e4ffa7), color-stop(0.1, #bced50), color-stop(0.4, #aed943), color-stop(0.8, #a7d143), to(#99BF40));
+    }
+
+    div.speech.right:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 9px;
+        bottom: auto;
+        left: auto;
+        right: -10px;
+        border-width: 9px 0 9px 10px;
+        border-color: transparent #989898;
+    }
+
+    div.speech.right:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 10px;
+        bottom: auto;
+        left: auto;
+        right: -8px;
+        border-width: 8px 0 8px 9px;
+        border-color: transparent #bced50;
+    }
+
+    div .left {
+        display: inline-block;
+        box-shadow: 2px 2px 2px #CCCCCC;
+        margin-left: 10px;
+        max-width: 75%;
+        position: relative;
+        background: -webkit-gradient( linear, 50% 0%, 50% 100%, from(#ffffff), color-stop(0.1, #eae8e8), color-stop(0.4, #E3E3E3), color-stop(0.8, #DFDFDF), to(#D9D9D9));
+    }
+
+    div .left:before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 9px;
+        bottom: auto;
+        left: -10px;
+        border-width: 9px 10px 9px 0;
+        border-color: transparent #989898;
+    }
+
+    div .left:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 10px;
+        bottom: auto;
+        left: -8px;
+        border-width: 8px 9px 8px 0;
+        border-color: transparent #eae8e8;
+    }
+
+    .leftimg {
+        float: left;
+        margin-top: 10px;
+    }
+
+    .rightimg {
+        float: right;
+        margin-top: 10px;
+    }
+
+    .leftd {
+        clear: both;
+        float: left;
+        margin-left: 10px;
+    }
+
+    .rightd {
+        clear: both;
+        float: right;
+        margin-right: 10px;
+    }
+
+    .leftd_h {
+        width: 39px;
+        height: 39px;
+        border-radius: 100%;
+        display: block;
+        float: left;
+        overflow: hidden;
+    }
+
+    .leftd_h image {
+        display: block;
+        width: 120rpx;
+        height: 120rpx;
+    }
+
+    .rightd_h {
+        width: 39px;
+        height: 39px;
+        border-radius: 100%;
+        display: block;
+        float: right;
+        overflow: hidden;
+    }
+
+    .rightd_h image {
+        display: block;
+        width: 120rpx;
+        height: 120rpx;
+    } */
+</style>
